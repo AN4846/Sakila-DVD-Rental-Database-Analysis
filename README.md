@@ -115,13 +115,13 @@ WITH t1 AS(SELECT
     ,c.last_name || ', ' || c.first_name AS Name
     ,c.email
     ,f.title As Film
-    ,ROUND(JULIANDAY(r.return_date) - JULIANDAY(r.rental_date), 2) - f.rental_duration AS Overdue_Days
+    ,ROUND(JULIANDAY(r.return_date) - JULIANDAY(r.rental_date), 2) - f.rental_duration AS Days_Over
 FROM rental AS r
 JOIN inventory AS i ON r.inventory_id = i.inventory_id
 JOIN film AS f ON i.film_id = f.film_id
 JOIN customer AS c ON r.customer_id = c.customer_id
 WHERE r.return_date IS NOT NULL
-AND Overdue_Days > 0
+AND Days_Over > 0
 ORDER BY r.rental_id
 ),
 t2 AS (
