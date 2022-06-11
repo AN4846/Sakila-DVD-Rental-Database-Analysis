@@ -1,6 +1,6 @@
 These are some sample SQL Queries used to analyze the Sakila DVD rental database.
 
-<b>Q1) Which actor starred in all 16 categories?</b>
+<b>Q1- Which actor starred in all 16 categories?</b>
 ```sql
 SELECT film_actor.actor_id,actor.first_name,actor.last_name, COUNT(DISTINCT category.category_id) AS tot
 FROM film_actor JOIN film USING (film_id)
@@ -11,7 +11,7 @@ GROUP BY film_actor.actor_id,actor.first_name,actor.last_name
 HAVING tot = 16
 ```
 
-<b>Q2) Of those who starred in all 16 categories, which actors starred in the most movies?</b>
+<b>Q2- Of those who starred in all 16 categories, which actors starred in the most movies?</b>
 ```sql
 WITH t1 AS (
 SELECT film_actor.actor_id,actor.first_name,actor.last_name, COUNT(DISTINCT category.category_id) AS tot
@@ -29,7 +29,7 @@ GROUP BY film_actor.actor_id, actor.first_name, actor.last_name
 ORDER BY COUNT(*) DESC
 ```
 
-<b>Q3) Get customers who’ve rented movies from all categories</b>
+<b>Q3- Get customers who’ve rented movies from all categories</b>
 ```sql
 SELECT customer.customer_id, customer.first_name, customer.last_name, COUNT(DISTINCT category.name) AS tot
 FROM rental JOIN inventory USING(inventory_id)
@@ -42,7 +42,7 @@ HAVING tot = (SELECT COUNT(DISTINCT category.name) FROM category)
 ORDER BY customer.last_name, customer.first_name, customer.customer_id
 ```
 
-<b>Q4) Get actors who've starred in Sci-Fi movies</b>
+<b>Q4- Get actors who've starred in Sci-Fi movies</b>
 ```sql
 SELECT DISTINCT actor.actor_id, actor.first_name, actor.last_name
 FROM actor 
@@ -55,7 +55,7 @@ JOIN category USING(category_id)
 WHERE category.name = 'Sci-Fi') t1 ON t1.actor_id = actor.actor_id
 ```
 
-<b>Q5) Get customers who didn't rent from the top 5 selling actors in rental volume.</b>
+<b>Q5- Get customers who didn't rent from the top 5 selling actors in rental volume.</b>
 ```sql
 WITH t1 AS (
 SELECT a.actor_id, 
@@ -77,7 +77,7 @@ JOIN film ON inventory.film_id = film.film_id
 WHERE film.film_id IN (SELECT DISTINCT film_id
 FROM film_actor WHERE actor_id IN(SELECT t1.actor_id FROM t1)))
 ```
-<b>Q6) Get each customer's favorite actor using rental volume</b>
+<b>Q6- Get each customer's favorite actor using rental volume</b>
 ```sql
 WITH t1 AS (
 SELECT customer.customer_id, film_actor.actor_id, COUNT(film_actor.actor_id) AS tot
@@ -97,7 +97,7 @@ FROM t2 JOIN t1 ON t2.customer_id = t1.customer_id AND t1.tot = t2.tot
 JOIN customer ON t1.customer_id = customer.customer_id
 JOIN actor ON actor.actor_id = t1.actor_id
 ```
-<b>Q7) Get movies offered in both stores 1 and 2</b>
+<b>Q7- Get movies offered in both stores 1 and 2</b>
 ```sql
 SELECT film_id
 FROM inventory 
@@ -107,7 +107,7 @@ SELECT film_id
 FROM inventory
 WHERE store_id = 2
 ```
-<b>Q8) For each customer, find the percantage of rentals that were overdue</b>
+<b>Q8- For each customer, find the percantage of rentals that were overdue</b>
 ```sql
 WITH t1 AS(SELECT
     r.rental_id AS Rental_ID
@@ -144,7 +144,7 @@ FROM t2 JOIN t3 ON t2.customer_id = t3.customer_id
 ORDER BY Percent_Overdue DESC
 ```
 
-<b>Q9) Get actors whose movies were rented the most</b>
+<b>Q9- Get actors whose movies were rented the most</b>
 ```sql
 SELECT actor.actor_id, COUNT(*) AS tot_rent
 FROM rental JOIN inventory USING(inventory_id)
@@ -156,7 +156,7 @@ ORDER BY tot_rent DESC
 ```
 
 
-<b>Q10) Get the count of customers in each country</b>
+<b>Q10- Get the count of customers in each country</b>
 ```sql
 SELECT country.country_id, country.country, COUNT(DISTINCT customer.customer_id) AS tot
 FROM rental JOIN customer ON rental.customer_id = customer.customer_id
